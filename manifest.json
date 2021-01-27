@@ -97,17 +97,17 @@
         },
         "nvueLaunchMode" : "",
         "nativePlugins" : {
-            "HG-OfficeReader" : {
+            "HG-OfficeReader-A" : {
                 "__plugin_info__" : {
-                    "name" : "office文件浏览器 - [试用版，仅用于自定义调试基座]",
-                    "description" : "可以在uniapp内部，支持ppt,word,excel文件格式打开 Q群：219508489",
-                    "platforms" : "Android",
-                    "url" : "https://ext.dcloud.net.cn/plugin?id=673",
+                    "name" : "office在线文档显示 - [试用版，仅用于自定义调试基座]",
+                    "description" : "在线查看ppt,doc,pdf,xls pptx,docx,xlsx 群：219508489",
+                    "platforms" : "Android,iOS",
+                    "url" : "https://ext.dcloud.net.cn/plugin?id=2175",
                     "android_package_name" : "",
                     "ios_bundle_id" : "",
                     "isCloud" : true,
                     "bought" : 0,
-                    "pid" : "673",
+                    "pid" : "2175",
                     "parameters" : {}
                 }
             }

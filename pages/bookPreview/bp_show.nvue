@@ -1,14 +1,17 @@
 <template>
 	<view>
-		<div>
-			 <HG-OfficeReader ref = "office" width="100%" height="100%" style="width: 100%; height: 300px;" />
-		</div>
-		<scroll-view scroll-x>
-			<view style="display: flex;">
-				<button type="primary" @click="open()">打开</button>
-				<button type="default"  @click="close()">关闭</button>
+		<scroll-view  scroll-x>
+			<view style="">
+				<button style="margin: 12upx; width: 120upx;" type="primary" @click="open()">打开</button>
+				<button style="margin: 12upx; width: 120upx;" type="default"  @click="close()">关闭</button>
 			</view>
 		</scroll-view>
+		
+		<div>
+			 <HG-OfficeReader-A ref = "office" width="100%" height="100%" style="width: 100%; height: 700px;" />
+		</div> 
+		<image style="width: 100%; height: 200upx;" src="../../static/SGL_logo.png" mode="aspectFill"></image>
+		
 	</view>
 </template>
 
@@ -16,13 +19,6 @@
 	export default {
 		data() {
 			return {
-				buttonList : [{
-					title : '新增',
-					background : '#00c566'
-				},{
-					title : '刷新',
-					background : '#ff6600'
-				}],//按钮列表
 			}
 		},
 		onLoad:function(e){
@@ -31,9 +27,10 @@
 		methods: {
 			//打开预览
 			open(){
-				this.$refs.office.openFile("http://cpc.people.com.cn/mediafile/200812/01/P200812010809124222263651.doc");
+				this.$refs.office.openFile('https://www.gjtool.cn/pdfh5/git.pdf');
+				
 			},
-			//关闭预览
+			//关闭预览 
 			close(){
 				this.$refs.office.closeFile(); 
 			},
