@@ -1,0 +1,82 @@
+@charset "UTF-8";
+/**
+ * 下方引入的为uView UI的集成样式文件，为scss预处理器，其中包含了一些"u-"开头的自定义变量
+ * uView自定义的css类名和scss变量，均以"u-"开头，不会造成冲突，请放心使用 
+ */
+.A_view.data-v-64a41884 {
+  background: #f6f6f6;
+  width: 40%;
+}
+.A_view .view_input.data-v-64a41884 {
+  margin: 12rpx 8rpx 4rpx 8rpx;
+  background: #fff;
+  height: 44rpx;
+  border-radius: 4rpx;
+  padding: 0 12rpx;
+  font-size: 16rpx;
+  border: 1px  solid #eee;
+}
+.A_view .view_listView.data-v-64a41884 {
+  background: #f6f6f6;
+  margin: 0 8rpx;
+  border-bottom: 1px solid #eee;
+  padding: 14rpx 0;
+  font-size: 16rpx;
+}
+.A_view .view_listView.view_listViewColor.data-v-64a41884 {
+  background: #A0CFFF;
+}
+.B_view.data-v-64a41884 {
+  margin-left: 4rpx;
+  background: #3785f9;
+  width: 60%;
+  height: 48rpx;
+  border-radius: 4rpx;
+}
+.B_view .view_text.data-v-64a41884 {
+  padding: 0 12rpx;
+  font-size: 16rpx;
+  color: #FFFFFF;
+  font-weight: 400;
+}
+.B_view .B_ListView.data-v-64a41884 {
+  padding: 0rpx 12rpx;
+}
+.B_view .B_ListView .ListView_view.data-v-64a41884 {
+  position: relative;
+  padding: 6rpx 0 16rpx 0;
+  border-bottom: 1px solid #eee;
+}
+.B_view .B_ListView .ListView_view .LS_v_text1.data-v-64a41884 {
+  font-size: 16rpx;
+}
+.B_view .B_ListView .ListView_view .LS_v_text2.data-v-64a41884 {
+  position: absolute;
+  right: 0rpx;
+  top: 10rpx;
+  font-size: 14rpx;
+}
+.B_view .B_ListView .ListView_view .LS_v_text2.color1.data-v-64a41884 {
+  color: #1fd757;
+}
+.B_view .B_ListView .ListView_view .LS_v_text2.color2.data-v-64a41884 {
+  color: #fe5b5a;
+}
+.B_view .B_ListView .ListView_view .LS_v_text3.data-v-64a41884 {
+  position: absolute;
+  right: 0rpx;
+  bottom: 14rpx;
+  font-size: 12rpx;
+}
+.box_scrollView.data-v-64a41884 {
+  white-space: nowrap;
+  margin: 4rpx 0;
+}
+.box_scrollView .scrollView_text.data-v-64a41884 {
+  margin-left: 12rpx;
+  padding: 8rpx 16rpx;
+  font-size: 14rpx;
+  color: #FFFFFF;
+  border-radius: 4rpx;
+}
+
