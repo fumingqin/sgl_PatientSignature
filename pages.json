@@ -27,7 +27,11 @@
 			}
 		}
 
-	],
+	    ,{
+            "path" : "pages/home/login",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uView",
