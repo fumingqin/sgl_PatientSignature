@@ -1,15 +1,17 @@
 <template>
 	<view>
-		<scroll-view  scroll-x>
-			<view style="">
-				<button style="margin: 12upx; width: 120upx;" type="primary" @click="open()">打开</button>
-				<button style="margin: 12upx; width: 120upx;" type="default"  @click="close()">关闭</button>
+		<scroll-view style="position: fixed; right: 32upx; top: 48upx;" scroll-x>
+			<view style="flex-direction:row">
+				<button v-if="signatureStatus == false" style="margin: 12upx; width: 200upx; background-color: #3785f9; " @click="open()"><text style="color: #FFFFFF; font-size: 18px;">提交</text></button>
+				<button v-if="signatureStatus == true" style="margin: 12upx; width: 200upx; background-color: #3785f9; " @click="open()"><text style="color: #FFFFFF; font-size: 18px;">签名</text></button>
+				<button style="margin: 12upx; width: 200upx; background-color: #18B566; "  @click="open()"><text style="color: #FFFFFF; font-size: 18px;">刷新</text></button>
+				<button style="margin: 12upx; width: 200upx;" type="default"  @click="close()">关闭</button>
 			</view>
 		</scroll-view>
 		
-		<div>
-			 <HG-OfficeReader-A ref = "office" width="100%" height="100%" style="width: 100%; height: 700px;" />
-		</div> 
+		<view>
+			 <HG-OfficeReader-A ref = "office" width="100%" height="100%" style="width: 100%" :style="{'height' : iphoneHeight}" />
+		</view> 
 		
 	</view>
 </template>
@@ -18,21 +20,51 @@
 	export default {
 		data() {
 			return {
+				iphoneHeight : 1125, //页面高度
+				signatureStatus : true , //签名状态
 			}
 		},
 		onLoad:function(e){
 			
 		},
+		onReachBottom:function(){
+			this.ReachAccumulation()
+			console.log('触底了')
+		},
 		methods: {
 			//打开预览
 			open(){
+				uni.getSystemInfo({
+					success: (res) => {
+						this.imageHeight = res.windowHeight + 'px'
+						console.log(res)
+					}
+				})
 				this.$refs.office.openFile('https://www.gjtool.cn/pdfh5/git.pdf');
-				
 			},
 			//关闭预览 
 			close(){
-				this.$refs.office.closeFile(); 
+				if(this.signatureStatus == true){
+					uni.showModal({
+						title:'您已签名，确定要关闭吗？',
+						content:'为确保医疗签名的完整性与不可抵赖性，签名过程中一旦关闭将作废处理',
+						success: (res) => {
+							if(res.confirm == true){
+								this.$refs.office.closeFile();
+								uni.navigateBack()
+							}
+						}
+					})
+				}else{
+					this.$refs.office.closeFile();
+					uni.navigateBack()
+				}
+				
 			},
+			//触底累加
+			ReachAccumulation : function(){
+				this.iphoneHeight =  this.iphoneHeight + 1125
+			}
 		}
 	}
 </script>
