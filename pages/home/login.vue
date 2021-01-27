@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="background">
-			<image class="br_image" src="../../static/background.png" mode="aspectFill"></image>
+			<image class="br_image" src="../static/background.png" mode="aspectFill"></image>
 		</view>
 	</view>
 </template>
@@ -21,13 +21,13 @@
 
 <style lang="less">
 	.background{
-		position: relative;
+		// position: relative;
 		width: 100%;
-		height: 100%;
+		height: 768upx;
 		
 		.br_image{
 			width: 100%;
-			height: 100%;
+			height: 768upx;
 		}
 	}
 </style>
