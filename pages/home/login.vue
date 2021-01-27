@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="background">
-			<image class="br_image" src="../static/background.png" mode="aspectFill"></image>
+			<image class="br_image" src="../../static/background.png" mode="aspectFill"></image>
 		</view>
 	</view>
 </template>
@@ -27,7 +27,7 @@
 		
 		.br_image{
 			width: 100%;
-			height: 768upx;
+			height: 100%;
 		}
 	}
 </style>
