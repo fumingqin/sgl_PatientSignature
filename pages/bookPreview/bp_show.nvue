@@ -10,7 +10,6 @@
 		<div>
 			 <HG-OfficeReader-A ref = "office" width="100%" height="100%" style="width: 100%; height: 700px;" />
 		</div> 
-		<image style="width: 100%; height: 200upx;" src="../../static/SGL_logo.png" mode="aspectFill"></image>
 		
 	</view>
 </template>
