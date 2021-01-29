@@ -1,15 +1,18 @@
 <template>
-	<view class="signa">
-		<view class="btn">
-			<view class="cancel-btn" @click="clear">
-				重写
-			</view>
-			<view class="save-btn" @click="save">
-				保存
-			</view>
+	<view style="padding: 8px 12px;" >
+		<view class="auto_A_view">
+			<text class="A_v_text"> <text style="color: #FA3534;">温馨提醒：</text>请用正楷进行签名，保证签署的真实有效性</text>
 		</view>
-		<canvas id="canvas" disable-scroll="true" :style="{'width':width,'height':height}" canvas-id="cid" @touchstart="starts"
-		 @touchmove="moves" @touchend="end"></canvas>
+		
+		<view style="border: 1px solid #d6d6d6;">
+			<canvas id="canvas" disable-scroll="true" :style="{'width':width,'height':height}" canvas-id="cid" @touchstart="starts" @touchmove="moves" @touchend="end"></canvas>
+		</view>
+		
+		<view class="auto_B_view" >
+			<view class="B_v_button" style="background: #bbb; " @click="back">返回</view>
+			<view class="B_v_button" style="background: #ff6600;" @click="clear">重写</view>
+			<view class="B_v_button" style="background: #2979FF;" @click="save">保存</view>
+		</view>
 	</view>
 </template>
 
@@ -28,10 +31,10 @@
 		created() {
 			uni.getSystemInfo({
 				success: (res) => {
-
-					this.width = res.windowWidth - 50 + 'px';
-					this.height = res.windowHeight - 15 + 'px';
-
+					console.log(res.windowWidth)
+					console.log(res.windowHeight)
+					this.width = res.windowWidth - 24 + 'px';
+					this.height = res.windowHeight - 140 + 'px';
 				}
 			});
 			this.dom = uni.createCanvasContext('cid');
@@ -113,90 +116,72 @@
 				}
 
 			},
+			//清理画布
 			clear() {
 				this.dom.clearRect(0, 0, 1000, 1000)
 				this.dom.draw()
 			},
+			//签名保存图片
 			save() {
 				var t=this;
 				uni.canvasToTempFilePath({
 					canvasId: 'cid',
 					fileType: 'png',
 					quality: 1, //图片质量
-					success(res) {
+					success:(res)=>{
 						console.log(res)
 						console.log(res.tempFilePath)
-						t.$emit('getImg',res.tempFilePath)
-						uni.navigateBack({
-							delta:1
+						uni.showToast({
+							title:'保存成功，临时图片路径：' + res.tempFilePath,
+							icon:'none',
+							duration:1500,
 						})
+						uni.setStorage({
+							key:'autoStorage',
+							data:true
+						})
+						setTimeout(function(){
+							uni.navigateBack()
+						},1500)
+						
 					}
 				})
-				uni.l 
-				
+			},
+			//返回上一个页面
+			back(){
+				uni.navigateBack()
 			}
 		}
 	}
 </script>
 
 <style scoped lang="scss">
-	.signa {
-		position: relative;
-		overflow: hidden;
-		background-color: #fbfbfb;
-		// background-color: #aa55ff;
-		height: 100vhh;
-		width: 100vw;
-		#canvas {
-			background-color: white;
-			margin-left: 110rpx;
-			border: 1px solid #d6d6d6;
-		}
-
-		.content {
-			margin-left: 60px;
-			height: 100vh;
-			background-color: white;
-		}
-
-		.btn {
-			height: 100vh;
-			position: fixed;
-			font-size: 32rpx;
-			.cancel-btn {
-				width: 42vh;
-				position: fixed;
-				left: 50rpx;
-				border: 1rpx solid #a9a1a1;
-				transform: rotate(90deg);
-				color: #666;
-				margin-left: -21vh;
-				margin-top: 21vh;
-				height: 65rpx;
-				line-height: 65rpx;
-				border-radius: 3px;
-				text-align: center;
-				justify-content: center;
-			}
-
-			.save-btn {
-				position: absolute;
-				z-index: 999;
-				display: inline-flex;
-				margin-top: 67vh;
-				margin-left: -21vh;
-				transform: rotate(90deg);
-				background: #3785f9;
-				width: 42vh;
-				left: 50rpx;
-				border-radius: 3px;
-				border: 1rpx solid #3785f9;
-				color: #fff;
-				height: 65rpx;
-				line-height: 65rpx;
-				text-align: center;
-				justify-content: center;
-			}
+	.auto_A_view{
+		width: 100%;
+		margin-bottom: 8px;
+		.A_v_text{
+			text-align: center;
+			 font-size: 15px;
+			 font-weight: bold; 
 		}
 	}
+	
+	.auto_B_view{
+		width: 100%;
+		display: flex; 
+		margin-top: 16px;
+		text-align: center; 
+		padding: 0 20px; 
+		font-size: 15px;
+		
+		.B_v_button{
+			width: 33%;
+			margin: 0 20upx; 
+			padding: 11px 0px;
+			color: #FFFFFF;
+			border-radius: 4px;
+		}
+	}
+	
+	
 </style>

@@ -51,7 +51,9 @@
                     "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ],
-                "abiFilters" : [ "armeabi-v7a", "arm64-v8a", "x86" ]
+                "abiFilters" : [ "armeabi-v7a", "arm64-v8a", "x86" ],
+                "minSdkVersion" : 19,
+                "targetSdkVersion" : 19
             },
             /* ios打包配置 */
             "ios" : {},
@@ -97,17 +99,17 @@
         },
         "nvueLaunchMode" : "",
         "nativePlugins" : {
-            "HG-OfficeReader-A" : {
+            "HG-OfficeReader" : {
                 "__plugin_info__" : {
-                    "name" : "office在线文档显示 - [试用版，仅用于自定义调试基座]",
-                    "description" : "在线查看ppt,doc,pdf,xls pptx,docx,xlsx 群：219508489",
-                    "platforms" : "Android,iOS",
-                    "url" : "https://ext.dcloud.net.cn/plugin?id=2175",
+                    "name" : "office文件浏览器 - [试用版，仅用于自定义调试基座]",
+                    "description" : "可以在uniapp内部，支持ppt,word,excel文件格式打开 Q群：219508489",
+                    "platforms" : "Android",
+                    "url" : "https://ext.dcloud.net.cn/plugin?id=673",
                     "android_package_name" : "",
                     "ios_bundle_id" : "",
                     "isCloud" : true,
                     "bought" : 0,
-                    "pid" : "2175",
+                    "pid" : "673",
                     "parameters" : {}
                 }
             }

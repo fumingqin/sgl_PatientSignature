@@ -4,6 +4,18 @@
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+		    "path" : "pages/home/login",
+		    "style" : {
+				"navigationBarTitleText": "",
+				"navigationStyle": "custom"
+			}
+		},{
+			"path": "pages/home/h_index",
+			"style": {
+				"navigationBarTitleText": " ",
+				"navigationStyle": "custom"
+			}
+		},{
 			"path": "pages/bookPreview/bp_show",
 			"style": {
 				"navigationBarTitleText": "",
@@ -12,24 +24,21 @@
 			}
 		
 		},{
-			"path": "pages/home/h_index",
-			"style": {
-				"navigationBarTitleText": " ",
-				"navigationStyle": "custom"
-			}
-		},{
-		    "path" : "pages/home/login",
-		    "style" : {}
-		},
-		
-		{
 			"path": "pages/bookPreview/bp_autograph",
 			"style": {
 				"navigationBarTitleText": "",
+				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
+		},{
+		    "path" : "pages/home/text",
+		    "style" :                                                                                    
+		    {
+		        "navigationBarTitleText": "",
+				"navigationStyle": "custom",
+		        "enablePullDownRefresh": false
+		    }
 		}
-	    
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
