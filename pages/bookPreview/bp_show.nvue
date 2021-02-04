@@ -1,146 +1,237 @@
 <template>
 	<view>
-		
 		<scroll-view class="bp_show_view" scroll-x>
 			<view>
-				<!-- <text style="font-size:16px; margin: 8px;">患者姓名：{{patientName}} </text> -->
-				<text style="font-size:14px; margin-left: 8px;" :style="signatureStatus == true ? 'color : #3785f9' : 'color : #FA3534'">签署状态：{{(signatureStatus == true ? '已签' : '未签')}}</text>
+				<text style="font-size:14px; margin-left: 8px;" :style="fileData.status == 1 ? 'color : #3785f9' : 'color : #FA3534'">签署状态：{{statusChange(fileData.status)}}</text>
 			</view>
-			<view style="">
-				<button class="b_s_v_button" style=" background-color: #fe5b5a; border-color: #fe5b5a;"  @click="close"><text class="button_text">关闭</text></button>
-				<button class="b_s_v_button" style=" background-color: #18B566; border-color:#18B566;"  @click="open"><text class="button_text">刷新</text></button>
-				<!-- <button v-if="signatureStatus == true" class="b_s_v_button" style=" background-color: #ff6600; border-color:#ff6600; " @click="natTo"><text class="button_text">重签</text></button> -->
-				<button v-if="signatureStatus == true" class="b_s_v_button" style=" background-color: #3785f9; border-color:#3785f9; " @click="submit"><text class="button_text">提交</text></button>
-				<button v-if="signatureStatus == false" class="b_s_v_button" style=" background-color: #3785f9; border-color:#3785f9;" @click="natTo"><text class="button_text">签名</text></button>
+			<view>
+				<button class="b_s_v_button" style=" background-color: #fe5b5a; border-color: #fe5b5a;" @click="close"><text class="button_text">关闭文档</text></button>
+				<button class="b_s_v_button" style=" background-color: #18B566; border-color:#18B566;" @click="loadData"><text
+					 class="button_text">刷新文档</text></button>
+				<button class="b_s_v_button" style=" background-color: #18B566; border-color:#18B566;" @click="popupShow"><text
+					 class="button_text">查看详情</text></button>
+				<!-- <button v-if="fileData.status == 0" class="b_s_v_button" style=" background-color: #ff6600; border-color:#ff6600; "
+				 @click="natTo"><text class="button_text">取消签署</text></button> -->
+				<button v-if="fileData.status == 1" class="b_s_v_button" style=" background-color: #3785f9; border-color:#3785f9; "
+				 @click="submit"><text class="button_text">确认提交</text></button>
+				<button v-if="fileData.status == 0" class="b_s_v_button" style=" background-color: #3785f9; border-color:#3785f9;"
+				 @click="natTo"><text class="button_text">开始签名</text></button>
 			</view>
 		</scroll-view>
-		
-		<div>
-			 <HG-OfficeReader  ref="office" width="100%" height="100%" style="width: 100vh" :style="{'height' : iphoneHeight}"/>
-		</div>
-		
+
+
+
+		<view>
+			<HG-OfficeReader ref="office" width="100%" height="100%" style="width: 100vh" :style="{'height' : iphoneHeight}" />
+		</view>
+
 	</view>
 </template>
 
 <script>
+	import sgl from '../../common/sgl_Interface.js'
 	export default {
 		data() {
 			return {
-				iphoneHeight : 533, //页面高度
-				patientName : '张三五',//患者姓名
-				signatureStatus : false , //签名状态
-				url : 'https://www.gjtool.cn/pdfh5/git.pdf',//pdf地址
+				iphoneHeight: 533, //页面高度
+				id: '', //文档id
+				officeStatus: false, //文件打开状态
+				fileData: '', //文件数据
+				documentName: '', //拆解后的文档名称
 			}
 		},
-		onLoad:function(e){
-			this.url = e.url;
-			uni.getSystemInfo({					success: (res) => {						this.imageHeight = res.windowHeight + 'px'					}			})
-					}, 
-		onShow:function(){
-			uni.getStorage({
-				key:'autoStorage',
-				success: (res) => {
-					this.signatureStatus = res.data;
-				},
-				fail: (err) => {
-					console.log(err)
-				}
-			})
+		onLoad: function(e) {
+			this.id = e.id;
 		},
-		onReady: function() {
-			this.open()
+		onShow: function() {
+			this.loadData()
 		},
-		onReachBottom:function(){
-			// this.ReachAccumulation()
-			console.log('触底了')
+
+		onBackPress: function() {
+			if (this.officeStatus == true) {
+				this.$refs.office.closeFile();
+				console.log('销毁')
+			}
 		},
+
 		methods: {
-			//打开预览
-			open:function(){
+			//加载文档详情数据
+			loadData: function() {
 				uni.showLoading({
-					title:'加载中...'
+					title: '加载中...'
 				})
+				uni.request({
+					url: sgl.SglInterface.details.Url,
+					method: sgl.SglInterface.details.method,
+					data: {
+						id: Number(this.id)
+					},
+					success: (res) => {
+						uni.hideLoading()
+						this.fileData = res.data.data;
+						var a = res.data.data.fileName.split('-')
+						this.documentName = a[1];
+						console.log(this.fileData)
+						this.open()
+					},
+					fail: (err) => {
+						uni.hideLoading()
+						uni.showToast({
+							title: '网络异常，请查看平板是否连接内网WIFI',
+							icon: 'none'
+						})
+						console.log(err)
+					}
+				})
+			},
+
+			//打开预览
+			open: function() {
 				uni.getSystemInfo({
 					success: (res) => {
-						console.log(res)
 						this.imageHeight = res.windowHeight + 'px'
 					}
 				})
-				console.log(this.url)
-				this.$refs.office.openFile(this.url);
-				setTimeout(function(){
-					uni.hideLoading()
-				},3000)
-				
-				
-				
+				this.$refs.office.openFile(this.fileData.downloadUrl);
+				this.officeStatus = true;
 			},
+
 			//关闭预览 
-			close:function(){
-				if(this.signatureStatus == true){
+			close: function() {
+				if (this.fileData.status == 1) {
 					uni.showModal({
-						title:'您已签名，但未提交，确定要关闭吗？',
-						content:'为确保医疗签名的完整性与不可抵赖性，签名提交过程中一旦关闭将作废处理',
+						title: '您已签名，但未提交，确定要关闭吗？',
+						content: '为确保医疗签名的完整性与不可抵赖性，签名提交过程中一旦关闭将作废处理',
 						success: (res) => {
-							if(res.confirm == true){
+							if (res.confirm == true) {
 								uni.navigateBack()
-								uni.removeStorage({
-									key:'autoStorage'
-								})
 							}
 						}
 					})
-				}else{
+				} else {
 					uni.navigateBack()
-					uni.removeStorage({
-						key:'autoStorage'
-					})
 				}
-				
 			},
-			//触底累加
-			ReachAccumulation : function(){
-				// this.iphoneHeight =  this.iphoneHeight + 533
-			},
-			
+
 			//签名手写跳转
-			natTo:function(){
+			natTo: function() {
+				uni.setStorage({
+					key: 'fileDataId',
+					data: this.id
+				})
+				uni.setStorage({
+					key: 'fileData',
+					data: this.fileData
+				})
 				uni.navigateTo({
-					url:'bp_autograph'
+					url: 'bp_autograph'
+				})
+			},
+
+			//文档状态转换
+			statusChange: function(e) {
+				if (e == 0) {
+					return '未签'
+				} else if (e == 1) {
+					return '已签'
+				} else if (e == 2) {
+					return '存档'
+				} else if (e == 3) {
+					return '取消'
+				}
+			},
+
+			//打开原生弹框
+			popupShow: function() {
+				const dcRichAlert = uni.requireNativePlugin('DCloud-RichAlert')
+				dcRichAlert.show({
+					position: 'center',
+					title: "文档详细信息",
+					titleColor: '#18B566',
+					content: '文档名称：' + this.documentName +'\n'
+						 + '患者姓名：' + this.fileData.patientName +'\n'
+						 + '签署状态：' + this.statusChange(this.fileData.status) +'\n'
+						 + '创建时间：' + this.fileData.createdAt +'\n'
+						 + '签名时间：' + this.fileData.signedAt +'\n'
+						 + '提交时间：' + this.fileData.submittedAt,
+					contentAlign: 'left',
+					buttons: [{
+						title: '关闭'
+					}]
+				}, result => {
+					switch (result.type) {
+						case 'button':
+							console.log("callback---button--" + result.index);
+							break;
+						case 'backCancel':
+							console.log("callback---backCancel--");
+							break;
+					}
 				})
 			},
 			
-			submit : function(){
-				uni.showToast({
-					title:'提交成功',
-					duration:1500,
-				})
-				setTimeout(function(){
-					uni.navigateBack()
-					uni.removeStorage({
-						key:'autoStorage'
-					})
-				},1500)
-				
-			}
 			
+			
+			
+			//提交
+			submit: function() {
+				uni.showLoading({
+					title:'提交中...'
+				})
+				uni.request({
+					url: sgl.SglInterface.submit.Url,
+					method: sgl.SglInterface.submit.method,
+					data: {
+						id: Number(this.id)
+					},
+					success: (res) => {
+						uni.hideLoading()
+						if(res.data.status){
+							uni.showToast({
+								title: '提交成功',
+								duration: 1000,
+							})
+							setTimeout(function() {
+								uni.navigateBack()
+							}, 1000)
+						}else{
+							uni.showToast({
+								title: '提交失败，请重新提交',
+								icon:'none'
+							})
+						}
+						
+					},
+					fail: (err) => {
+						uni.hideLoading()
+						uni.showToast({
+							title: '网络异常，请查看平板是否连接内网WIFI',
+							icon: 'none'
+						})
+						console.log(err)
+					}
+				})
+			}
+
 		}
 	}
 </script>
 
 <style lang="scss">
-	.bp_show_view{
-		position: fixed; 
-		right: 12px; 
+	.bp_show_view {
+		position: fixed;
+		right: 12px;
 		top: 32px;
 	}
-	.b_s_v_button{
-		margin: 8px; 
+
+	.b_s_v_button {
+		margin: 8px;
 		width: 112px;
 	}
-	.button_text{
+
+	.button_text {
 		padding: 12px 0;
-		color: #FFFFFF; 
+		color: #FFFFFF;
 		font-size: 14px;
 	}
 </style>

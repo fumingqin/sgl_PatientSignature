@@ -1,18 +1,19 @@
 {
 	"easycom": {
-		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
 	},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-		    "path" : "pages/home/login",
-		    "style" : {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom"
-			}
-		},{
 			"path": "pages/home/h_index",
 			"style": {
 				"navigationBarTitleText": " ",
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
+			}
+		},{
+		    "path" : "pages/home/login",
+		    "style" : {
+				"navigationBarTitleText": "",
 				"navigationStyle": "custom"
 			}
 		},{
@@ -22,7 +23,6 @@
 				"navigationStyle": "custom",
 				"enablePullDownRefresh": false
 			}
-		
 		},{
 			"path": "pages/bookPreview/bp_autograph",
 			"style": {
@@ -39,6 +39,7 @@
 		        "enablePullDownRefresh": false
 		    }
 		}
+        
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

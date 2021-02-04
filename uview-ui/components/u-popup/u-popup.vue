@@ -435,22 +435,22 @@ export default {
 }
 
 .u-close--top-left {
-	top: 30rpx;
-	left: 30rpx;
+	top: 24px;
+	left: 24px;
 }
 
 .u-close--top-right {
-	top: 30rpx;
-	right: 30rpx;
+	top: 24px;
+	right: 24px;
 }
 
 .u-close--bottom-left {
-	bottom: 30rpx;
-	left: 30rpx;
+	bottom: 24px;
+	left: 24px;
 }
 
 .u-close--bottom-right {
-	right: 30rpx;
-	bottom: 30rpx;
+	right: 24px;
+	bottom: 24px;
 }
 </style>

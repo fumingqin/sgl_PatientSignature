@@ -23,6 +23,7 @@
         },
         /* 模块配置 */
         "modules" : {},
+        // "Canvas" : "nvue canvas"
         /* 应用发布信息 */
         "distribute" : {
             /* android打包配置 */
@@ -99,6 +100,20 @@
         },
         "nvueLaunchMode" : "",
         "nativePlugins" : {
+            "HG-OfficeReader-A" : {
+                "__plugin_info__" : {
+                    "name" : "office在线文档显示 - [试用版，仅用于自定义调试基座]",
+                    "description" : "在线查看ppt,doc,pdf,xls pptx,docx,xlsx 群：219508489",
+                    "platforms" : "Android,iOS",
+                    "url" : "https://ext.dcloud.net.cn/plugin?id=2175",
+                    "android_package_name" : "",
+                    "ios_bundle_id" : "",
+                    "isCloud" : true,
+                    "bought" : 0,
+                    "pid" : "2175",
+                    "parameters" : {}
+                }
+            },
             "HG-OfficeReader" : {
                 "__plugin_info__" : {
                     "name" : "office文件浏览器 - [试用版，仅用于自定义调试基座]",
@@ -110,6 +125,20 @@
                     "isCloud" : true,
                     "bought" : 0,
                     "pid" : "673",
+                    "parameters" : {}
+                }
+            },
+            "DCloud-RichAlert" : {
+                "__plugin_info__" : {
+                    "name" : "原生增强提示框插件",
+                    "description" : "增强的原生提示框。可自定义颜色、按钮数量、放置超链接和checkbox。可覆盖页面中的原生组件",
+                    "platforms" : "Android,iOS",
+                    "url" : "https://ext.dcloud.net.cn/plugin?id=36",
+                    "android_package_name" : "sgl.app.hzq",
+                    "ios_bundle_id" : "sgl.app.hzq",
+                    "isCloud" : true,
+                    "bought" : 1,
+                    "pid" : "36",
                     "parameters" : {}
                 }
             }

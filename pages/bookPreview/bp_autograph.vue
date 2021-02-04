@@ -1,22 +1,29 @@
 <template>
 	<view style="padding: 8px 12px;" >
 		<view class="auto_A_view">
-			<text class="A_v_text"> <text style="color: #FA3534;">温馨提醒：</text>请用正楷进行签名，保证签署的真实有效性</text>
-		</view>
+			<text class="A_v_text"> <text style="color: #FA3534;">温馨提醒：</text>请用正楷进行签署，保证签署权益的完整性，签署完成后无法修改</text>
+			<text class="A_v_text" style="margin-left: 20px;"> <text style="color: #FA3534;">共签署：</text>{{fileData.positions.length}}处</text>
+			<text  class="A_v_text" style="margin-left: 20px;"> <text style="color: #FA3534;">您正处在：</text>第{{positionSeq +1}}处</text>
+			<view>
+				<text  class="A_v_text"> <text style="color: #FA3534;">请签写：</text>{{fileData.positions[positionSeq].tip}}</text>
+			</view>
+		</view> 
 		
 		<view style="border: 1px solid #d6d6d6;">
 			<canvas id="canvas" disable-scroll="true" :style="{'width':width,'height':height}" canvas-id="cid" @touchstart="starts" @touchmove="moves" @touchend="end"></canvas>
 		</view>
 		
 		<view class="auto_B_view" >
-			<view class="B_v_button" style="background: #bbb; " @click="back">返回</view>
+			<view class="B_v_button" style="background: #bbb;"  @click="back">返回</view>
 			<view class="B_v_button" style="background: #ff6600;" @click="clear">重写</view>
-			<view class="B_v_button" style="background: #2979FF;" @click="save">保存</view>
+			<view class="B_v_button" style="background: #2979FF;" v-if="positionSeq < fileData.positions.length -1" @click="save">下一步</view>
+			<view class="B_v_button" style="background: #2979FF;" v-if="positionSeq == fileData.positions.length -1 " @click="save">完成签名</view>
 		</view>
 	</view>
 </template>
-
+ 
 <script>
+	import { pathToBase64, base64ToPath } from '../../js_sdk/mmmm-image-tools/index.js'
 	export default {
 		data() {
 			return {
@@ -25,19 +32,42 @@
 				line: [],
 				width: '0px',
 				height: '0px',
-				radius: 0
+				radius: 0,
+				fileData : {
+					positions : [{
+						tip :''
+					}]
+				},//文档数据
+				id : '',//文档id
+				
+				positionSeq : 0, //签名序号
 			}
 		},
 		created() {
 			uni.getSystemInfo({
 				success: (res) => {
-					console.log(res.windowWidth)
-					console.log(res.windowHeight)
 					this.width = res.windowWidth - 24 + 'px';
-					this.height = res.windowHeight - 140 + 'px';
+					this.height = res.windowHeight - 180 + 'px';
 				}
 			});
 			this.dom = uni.createCanvasContext('cid');
+		},
+		onLoad:function(){
+			uni.getStorage({
+				key:'fileData',
+				success:(res)=>{
+					this.fileData = res.data
+				}
+			})
+			uni.getStorage({
+				key:'fileDataId',
+				success:(res)=>{
+					this.id = res.data
+				}
+			})
+		},
+		onBackPress: () => {
+			// return true
 		},
 		methods: {
 			end(e) {
@@ -106,7 +136,7 @@
 					dom.beginPath();
 					// dom.strokeStyle = 'black';
 					dom.setStrokeStyle('black')
-					dom.setLineWidth(5)
+					dom.setLineWidth(6)
 					// dom.lineWidth = 5;
 					// 起始点
 					dom.moveTo(x1, y1);
@@ -121,35 +151,111 @@
 				this.dom.clearRect(0, 0, 1000, 1000)
 				this.dom.draw()
 			},
-			//签名保存图片
-			save() {
-				var t=this;
+			
+			
+			//签名保存图片合成
+			save : function(){
+				uni.showLoading({
+					title:'保存签名中...'
+				})
 				uni.canvasToTempFilePath({
 					canvasId: 'cid',
 					fileType: 'png',
 					quality: 1, //图片质量
 					success:(res)=>{
-						console.log(res)
-						console.log(res.tempFilePath)
-						uni.showToast({
-							title:'保存成功，临时图片路径：' + res.tempFilePath,
-							icon:'none',
-							duration:1500,
-						})
-						uni.setStorage({
-							key:'autoStorage',
-							data:true
-						})
-						setTimeout(function(){
-							uni.navigateBack()
-						},1500)
-						
+						// console.log(res.tempFilePath)
+						pathToBase64(res.tempFilePath)
+						.then(base64 => {
+							uni.request({
+								url: this.$sgl.SglInterface.uploadStamp.Url,
+								method:this.$sgl.SglInterface.uploadStamp.method,
+								data:{
+									id : Number(this.id),
+									seq : this.fileData.positions[this.positionSeq].seq,
+									data  : base64
+								},
+								success :(res)=>{
+									if(res.data.status){
+										if(this.fileData.positions.length == this.positionSeq +1){
+											uni.hideLoading()
+											this.completeSigning()
+										}else{
+											this.clear()
+											uni.hideLoading()
+											this.positionSeq = this.positionSeq + 1;
+										}
+										
+									}else{
+										uni.hideLoading()
+										uni.showToast({
+											title:'签名保存失败，请检查是否连接内网WIFI/网络是否正常',
+											icon:'none'
+										})
+									}
+								},
+								fail : (err)=>{
+									// console.log(err)
+									uni.showToast({
+										title:'网络异常，请查看平板是否连接内网WIFI',
+										icon:'none'
+									})
+								}
+							})
+						 })
 					}
 				})
 			},
+			
+			//完成签名，文件合成
+			completeSigning : function(){
+				uni.showLoading({
+					title:'签署中...'
+				})
+				uni.request({
+					url: this.$sgl.SglInterface.composePDF.Url,
+					method:this.$sgl.SglInterface.composePDF.method,
+					data:{
+						id : Number(this.id),
+					},
+					success: (res) => {
+						console.log(res)
+						if(res.data.status){
+							uni.hideLoading()
+							uni.showToast({
+								title:'签署成功'
+							})
+							uni.navigateBack()
+						}else{
+							uni.hideLoading()
+							uni.showToast({
+								title:'签署失败，请重试按钮~',
+								icon:'none'
+							})
+						}
+					},
+					fail: (err) => {
+						uni.hideLoading()
+						uni.showToast({
+							title:'网络异常，请查看平板是否连接内网WIFI',
+							icon:'none'
+						})
+					}
+				})
+				
+				
+			},
+			
 			//返回上一个页面
 			back(){
-				uni.navigateBack()
+					uni.showModal({
+						title:'您确定要返回吗？',
+						content:'为确保签署的完整性、真实性等原因，返回后，已签名的内容将进行清空，同时患者需要重新进行身份认证!',
+						success : (res) => {
+							if(res.confirm){
+								uni.navigateBack()
+							}
+						}
+					})
 			}
 		}
 	}
